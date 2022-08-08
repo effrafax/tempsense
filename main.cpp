@@ -96,22 +96,27 @@ int print_adapter_info(hid_device *handle, int devices) {
     sprintf(prefix, "#   %-25s: ", "Serial Number");
     std::cout << prefix << wstr << "\n";
     printf("#   %-25s: %d\n", "Number of sensors found", devices);
+
+    printf("# Columns:\n");
+    printf("# date-time;devices;device id;temp value;sign;temp value without sign;unit\n");
     return 0;
 
 }
 
 int main(int argc, char **argv) {
     bool continuousMode = false;
+    bool quiet = false;
     int c;
     int option_index = 0;
     static struct option long_options[] = {
                    {"continuous",no_argument,0,'c'},
+                   {"quiet",no_argument,0,'q'},
                    {"help",no_argument,0,'h'},
                    {0,0,0,0}
     };
     
     while(1) {
-        c = getopt_long(argc, argv, "ch", long_options, &option_index);
+        c = getopt_long(argc, argv, "chq", long_options, &option_index);
         // stopping loop, if all args are parsed
         if (c == -1)
             break;
@@ -120,9 +125,14 @@ int main(int argc, char **argv) {
           case 'c':
             continuousMode = true;
             break;
+          case 'q':
+            quiet = true;
+            break;
           case 'h':
-            printf("\ntempsense [-c|--continuous] [-h|--help]\n");
+            printf("\ntempsense [-c|--continuous] [-q|--quiet] [-h|--help]\n");
+            printf("Prints the measured temperature of all found temp sensors attachted to the tester.\n");
             printf("  -c: Check values and print until the program is stopped. Otherwise only one sample is printed.\n");
+            printf("  -q: Quiet mode, prints no header information\n");
             printf("  -h: Print this usage\n\n");
             return 0;
           case '?':
@@ -145,9 +155,11 @@ int main(int argc, char **argv) {
     }
     int devices = get_num_devices(handle);    
     if ( devices >0 ) {
-        int result = print_adapter_info(handle,devices); 
-        if (result != 0 ) {
-            return result;
+        if (!quiet) {
+            int result = print_adapter_info(handle,devices); 
+            if (result != 0 ) {
+                return result;
+            }
         }
         if (continuousMode) {    
             for (;;) {
