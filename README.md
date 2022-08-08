@@ -4,6 +4,8 @@ Command line utilty to read out data from the AVR Temp Sensor made by Diamex Gmb
 
 As seen here: http://www.led-genial.de/USB-Temperatur-Sensor-Tester-fuer-DS18B20
 
+This fork is primary for Linux usage and tested only on the Linux platform
+
 ## Dependencies
 - clang (or gcc) in some newer incarnation 
 - [hidapi](https://github.com/signal11/hidapi)
@@ -40,3 +42,5 @@ After writing the file and replugging your temperature sensor, your account shou
 
 This code is licensed under the Affero GPL3 License!
 (c) J. Szpilewski in 2014, js@szpilewski.com
+Modifications of the fork:
+(c) Martin Schreier 2022, martin_s@apache.org
